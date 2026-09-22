@@ -1,0 +1,90 @@
+from fastapi import FastAPI
+from fastapi.staticfiles import StaticFiles
+
+
+
+import database as db
+from pydantic import BaseModel
+
+db.init_db() # Initialize the database and seed it with initial data if empty
+
+
+app = FastAPI(title="TimeTrack", description="A simple time tracking app with REST and MCP endpoints.", version="1.0.0")
+
+@app.get("/api/entries")
+def api_list_all_entries():
+    """List all time entries in the database."""
+    return db.list_all_entries()
+
+
+@app.get("/api/projects")
+def api_list_projects():
+    return db.list_projects()
+
+
+@app.get("/api/projects/{project}/summary")
+def api_project_summary(project: str):
+    return db.get_project_summary(project)
+
+
+@app.get("/api/timesheet/{employee_name}")
+def api_get_timesheet(employee_name: str, start_date: str = None, end_date: str = None):
+    return db.get_timesheet(employee_name, start_date, end_date)
+
+
+
+class NewEntry(BaseModel):
+    employee_name: str
+    project: str
+    entry_date: str
+    hours: float
+    description: str = ""
+
+@app.post("/api/entries")
+def api_log_entry(entry: NewEntry):
+    return db.log_time(entry.employee_name, entry.project, entry.entry_date, entry.hours, entry.description)
+
+
+# uvicorn main_to_understand:app --port 9998
+
+# uv run uvicorn main_to_understand:app --port 9998 -reload
+# http://127.0.0.1:9998/docs ------> Open swagger page, port should be right.
+
+
+## MCP Server 
+
+
+from fastmcp import FastMCP
+
+# Assumes the FastAPI app from above is already defined
+
+# Convert to MCP server
+mcp = FastMCP("TimeTrack")
+
+
+
+
+
+@mcp.tool()
+def log_time(employee_name: str, project: str, entry_date: str, hours: float, description: str = "") -> dict:
+    """Log a time entry. entry_date must be YYYY-MM-DD. Shows up on the website immediately."""
+    return db.log_time(employee_name, project, entry_date, hours, description)
+
+
+
+if __name__ == "__main__":
+    mcp.run()
+
+
+
+#To Run MCP server, use the following command in terminal:
+
+#npx @modelcontextprotocol/inspector uv run python "G:\mcp_time_tracker\Live-Class-2026\Complete MCP\TimeTrackProject\timetrack mcp server\main_to_understand_sk.py"
+
+#To Run with FastAPI server, use the following command in terminal:
+
+#uvicorn main_to_understand_sk:app --port 9998 --reload
+
+# To Start MCP Server, use the following command in terminal:
+
+#uv run fastmct run main_to_understand_sk.py
