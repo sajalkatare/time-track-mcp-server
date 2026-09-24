@@ -129,3 +129,7 @@ def serve_index():
 
 app.mount("/static", StaticFiles(directory="static"), name="static")
 app.mount("/mcp", mcp_app)
+
+#>uv run uvicorn main:app --reload --host 127.0.0.1 --port 8000
+#uv run fastmcp run main.py:mcp --transport http --host 127.0.0.1 --port 8000
+

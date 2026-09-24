@@ -50,6 +50,7 @@ def api_log_entry(entry: NewEntry):
 # uv run uvicorn main_to_understand:app --port 9998 -reload
 # http://127.0.0.1:9998/docs ------> Open swagger page, port should be right.
 
+# "G:\sk_mcp_time_tracker\timetrack mcp server\.venv\Scripts\activate.bat"
 
 ## MCP Server 
 
