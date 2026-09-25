@@ -1,5 +1,5 @@
 """
-07 -- TIMEOUT, WHICH TRIGGERS A REAL CANCELLATION
+08 -- TIMEOUT, WHICH TRIGGERS A REAL CANCELLATION
 ====================================================
 main.py's "slow_tool" deliberately takes about 5 seconds. Here, we
 connect with a much shorter timeout on purpose, so it actually times
@@ -10,7 +10,7 @@ to call_tool() itself -- verified against FastMCP's own current
 documentation.
 
 RUN:
-    python3 07_timeout_and_cancellation.py
+    python3 08_timeout_and_cancellation.py
 """
 import asyncio
 from fastmcp import Client

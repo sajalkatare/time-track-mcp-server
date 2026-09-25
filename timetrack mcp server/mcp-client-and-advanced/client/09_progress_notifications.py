@@ -1,5 +1,5 @@
 """
-08 -- PROGRESS NOTIFICATIONS, WATCHED LIVE
+09 -- PROGRESS NOTIFICATIONS, WATCHED LIVE
 =============================================
 main.py's "slow_tool" reports its progress as it works. Here we give the
 client a progress_handler, so every update prints the moment it arrives
@@ -10,7 +10,7 @@ NOTE: "progress_handler" is also set when you CREATE the Client, not
 per-call -- same rule as timeout in the previous file.
 
 RUN:
-    python3 08_progress_notifications.py
+    python3 09_progress_notifications.py
 """
 import asyncio
 from fastmcp import Client

@@ -1,5 +1,5 @@
 """
-03 -- A REAL AGENT LOOP, NO FRAMEWORK
+04 -- A REAL AGENT LOOP, NO FRAMEWORK
 =======================================
 This is what "an AI agent using MCP" actually is, underneath every
 framework that promises to do it for you. No LangChain, nothing hidden --
@@ -11,7 +11,7 @@ SETUP:
     export ANTHROPIC_API_KEY=your-key-here
 
 RUN:
-    python3 03_agent_loop.py
+    python3 04_agent_loop.py
 """
 import asyncio
 import os
@@ -69,16 +69,12 @@ async def run_agent_loop(user_message: str):
             )
 
             if response.stop_reason != "tool_use":
-                # The model is done -- it answered in plain text. Print it
-                # and stop the loop.
                 final_text = "".join(
                     block.text for block in response.content if block.type == "text"
                 )
                 print("\nFinal answer:", final_text)
                 return
 
-            # The model wants to use one or more tools. Save its request
-            # to the conversation, then actually go run each tool call.
             messages.append({"role": "assistant", "content": response.content})
 
             tool_results = [
@@ -87,12 +83,10 @@ async def run_agent_loop(user_message: str):
                 if block.type == "tool_use"
             ]
 
-            # Feed the results back in as the next "turn", and loop again --
-            # the model will see these results the next time we call it.
             messages.append({"role": "user", "content": tool_results})
 
 
 if __name__ == "__main__":
     asyncio.run(run_agent_loop(
-        "List every project in TimeTrack, then give me the summary for the first one."
+        "Hi."
     ))

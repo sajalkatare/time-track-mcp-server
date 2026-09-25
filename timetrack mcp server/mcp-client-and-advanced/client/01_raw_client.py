@@ -9,8 +9,8 @@ by hand, so you can see exactly what happens.
 There is a real, currently open bug where the line `stdio_client(...)`
 below hangs FOREVER on macOS specifically (official SDK issue #1452).
 If this script just sits there and never prints anything, that is why --
-it is not a mistake in this code. Skip straight to 02_fastmcp_client.py,
-which does the exact same thing safely.
+it is not a mistake in this code. Skip straight to 02, which does the
+exact same thing safely.
 
 SETUP:
     pip install mcp
@@ -23,8 +23,6 @@ from mcp import ClientSession, StdioServerParameters
 from mcp.client.stdio import stdio_client
 
 # This describes HOW to start the server -- it does not start it yet.
-# command="python3" + args=["main.py"] means: run "python3 main.py"
-# as a brand new subprocess, and talk to it over stdin/stdout.
 server_params = StdioServerParameters(
     command="python3",
     args=["../main.py"],
@@ -32,23 +30,15 @@ server_params = StdioServerParameters(
 
 
 async def main():
-    # STEP 1: open the connection. "async with" means Python will
-    # automatically close everything properly when we're done, even if
-    # something goes wrong in between.
+    # STEP 1: open the connection.
     async with stdio_client(server_params) as (read_stream, write_stream):
-
-        # STEP 2: wrap a "session" around those two raw streams. The
-        # session is what actually understands MCP messages -- the
-        # streams by themselves are just bytes going back and forth.
+        # STEP 2: wrap a "session" around those two raw streams.
         async with ClientSession(read_stream, write_stream) as session:
-
-            # STEP 3: the handshake. This is the exact same "initialize"
-            # + "initialized" exchange from the Lifecycle video -- here,
-            # you are the one triggering it, by calling this one method.
+            # STEP 3: the handshake.
             await session.initialize()
             print("Connected! Handshake complete.")
 
-            # STEP 4: now that we're connected, ask what tools exist.
+            # STEP 4: ask what tools exist.
             tools_response = await session.list_tools()
             tool_names = [t.name for t in tools_response.tools]
             print("Tools this server offers:", tool_names)
