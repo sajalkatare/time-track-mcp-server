@@ -8,7 +8,8 @@ MCP, hand the result back, repeat.
 
 SETUP:
     pip install fastmcp anthropic
-    export ANTHROPIC_API_KEY=your-key-here
+    for mac: export ANTHROPIC_API_KEY=your-key-here
+    for windows: set ANTHROPIC_API_KEY=your-key-here
 
 RUN:
     python3 04_agent_loop.py
@@ -88,5 +89,5 @@ async def run_agent_loop(user_message: str):
 
 if __name__ == "__main__":
     asyncio.run(run_agent_loop(
-        "Hi."
+        "Give me the list of all projects"
     ))
